@@ -22,6 +22,8 @@ const route = router.get('/', (req, res, next) => {
 app.use('/', route);
 
 server.listen(PORT);
+server.on('error', onError);
+
 console.log('API running in port ' + 3000);
 
 
@@ -37,4 +39,26 @@ function normalizePort(val) {
     }
 
     return false
+}
+
+function onError(error) {
+    if(error.syscall !== 'listen') {
+        throw error;
+    }
+    const bind = typeof PORT === 'string' ?
+        'Pipe ' + PORT :
+        'Port ' + PORT;
+    
+    switch(error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use')
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
