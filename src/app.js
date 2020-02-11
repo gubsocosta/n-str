@@ -2,13 +2,10 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const mongoose = require('./database/index');
 
 const app = express();
-
-// Database connection
-mongoose.connect('mongodb+srv://node-str:nZ8xYley1DMXA0SZ@node-str-4gdhx.azure.mongodb.net/test?retryWrites=true&w=majority');
-
+ 
 // Config
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
