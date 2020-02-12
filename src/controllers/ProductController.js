@@ -74,9 +74,33 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-    res.status(200).send(req.body)
+    const { title, slug, description, price } = req.body;
+
+    Product.findByIdAndUpdate(req.params.id,{ title, slug, description, price })
+        .then(response => {
+            res.status(200).send({
+                message: 'Product updated successfully.'
+            });
+        })
+        .catch(err => {
+            res.status(400).send({
+                message: 'Failed to update the product.',
+                data: err,
+            });
+        })
 };
 
 exports.delete = (req, res, next) => {
-    res.status(200).send(req.body);
+    Product.findByIdAndRemove(req.body.id)
+        .then(response => {
+            res.status(200).send({
+                message: 'Product removed successfuly.'
+            });
+        })
+        .catch(err => {
+            res.status(400).send({
+                message: 'Failed to remove the product.',
+                data: err
+            });
+        })
 };
