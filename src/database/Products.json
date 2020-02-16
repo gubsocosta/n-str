@@ -1,0 +1,24 @@
+{
+	"title": "mouse sem fio",
+	"description": "mouse sem fio",
+	"slug": "mouse-sem-fio",
+	"price": 120.0,
+	"active": false,
+	"tags": ["mouse", "sem fio", "informatica"]
+},
+{
+	"title": "tela LED 4K",
+	"description": "tela LED 4K",
+	"slug": "tela-led-4k",
+	"price": 2000.0,
+	"active": false,
+	"tags": ["tela", "led", "4k", "informatica"]
+},
+{
+	"title": "notebook 15 polegadas",
+	"description": "notebook 15 polegadas",
+	"slug": "notebook-15-polegadas",
+	"price": 4000.0,
+	"active": true,
+	"tags": ["notebook", "15", "informatica"]
+},

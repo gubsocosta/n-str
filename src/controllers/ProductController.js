@@ -1,11 +1,12 @@
 'use strict'
 
 const Product = require('../models/Product');
+const ValidationContract = require('../validators/fluent-validator');
+const repository = require('../repositories/ProductRepository');
 
 exports.get = (req, res, next) => {
-    Product.find({
-        active: true
-    }, 'title slug price')
+    repository
+        .get()
         .then(data => res.status(200).send(data))
         .catch(err => {
             res.status(400).send({
@@ -16,11 +17,9 @@ exports.get = (req, res, next) => {
 };
 
 exports.getBySlug = (req, res, next) => {
-    Product.findOne({
-        slug: req.params.slug,
-        active: true,
-    }, 'title description price tags')
-        .then(data =>res.status(200).send(data))
+    repository
+        .getBySlug(req.params.slug)
+        .then(data => res.status(200).send(data))
         .catch(err => {
             res.status(404).send({
                 message: 'Record not found',
@@ -30,7 +29,8 @@ exports.getBySlug = (req, res, next) => {
 };
 
 exports.getById = (req, res, next) => {
-    Product.findById(req.params.id)
+    repository
+        .getById(req.params.id)
         .then(data => res.status(200).send(data))
         .catch(err => {
             res.status(404).send({
@@ -41,10 +41,8 @@ exports.getById = (req, res, next) => {
 }; 
 
 exports.getByTag = (req, res, next) => {
-    Product.find({
-        tags: req.params.tag,
-        active: true
-    }, 'title slug description price tags')
+    repository
+        .getByTag(req.params.tag)
         .then(data => res.status(200).send(data))
         .catch(err => {
             res.status(404).send({
@@ -55,12 +53,30 @@ exports.getByTag = (req, res, next) => {
 }; 
 
 exports.post = (req, res, next) => {
-    const product = new Product(req.body)
+    const { title, slug, description, price } = req.body;
+    let contract =  new ValidationContract();
 
-    product.save()
+    contract.isRequired(title, 'The title field is required.');
+    contract.hasMinLen(title, 3, 'The title field must contain at least three characters');
+    
+    contract.isRequired(slug, 'The slug field is required.');
+    contract.hasMinLen(slug, 3, 'The slug field must contain at least three characters');
+    
+    contract.isRequired(description, 'The description field is required.');
+    contract.hasMinLen(description, 3, 'The description field must contain at least three characters');
+    
+    contract.isRequired(price, 'The price field is required.')
+    contract.isNumber(price, 'The price field must be a number.');
+    contract.isGreaterThan(price, 0, 'The price field must be gran than zero.');
+
+    if(!contract.isValid()) {
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+
+    repository
+        .store({ title, slug, description, price })
         .then(response => {
-            console.log(response);
-
             res.status(201).send({
                 message: 'Product successfully registered.'
             });
@@ -74,9 +90,8 @@ exports.post = (req, res, next) => {
 };
 
 exports.put = (req, res, next) => {
-    const { title, slug, description, price } = req.body;
-
-    Product.findByIdAndUpdate(req.params.id,{ title, slug, description, price })
+    repository
+        .update(req.params.id, req.body)
         .then(response => {
             res.status(200).send({
                 message: 'Product updated successfully.'
@@ -91,7 +106,8 @@ exports.put = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Product.findByIdAndRemove(req.body.id)
+    repository
+        .destroy(req.body.id)
         .then(response => {
             res.status(200).send({
                 message: 'Product removed successfuly.'
