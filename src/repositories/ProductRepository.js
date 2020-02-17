@@ -1,6 +1,7 @@
 'use strict'
 
-const Product = require('../models/Product');
+const mongoose = require('mongoose');
+const Customer = mongoose.model('Product');
 
 exports.get = async() => {
     const res = await Product.find({
