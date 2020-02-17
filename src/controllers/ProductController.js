@@ -8,7 +8,10 @@ exports.get = async (req, res, next) => {
         const data = await repository.get()
         res.status(200).send(data);
     } catch (err) {
-        sendErrorMessage(err)
+        res.status(500).send({
+            message: 'Failed to process request.',
+            // data: err,
+        });
     }
 };
 
@@ -26,7 +29,10 @@ exports.getById = async (req, res, next) => {
         const data  = await repository.getById(req.params.id);
         res.status(200).send(data);
     } catch (err) {
-        sendErrorMessage(err)
+        res.status(500).send({
+            message: 'Failed to process request.',
+            // data: err,
+        });
     }
 }; 
 
@@ -35,7 +41,10 @@ exports.getByTag = async (req, res, next) => {
         const data = await repository.getByTag(req.params.tag);
         res.status(200).send(data);
     } catch(err) {
-        sendErrorMessage(err)
+        res.status(500).send({
+            message: 'Failed to process request.',
+            // data: err,
+        });
     }
 }; 
 
@@ -68,7 +77,10 @@ exports.post = async (req, res, next) => {
             message: 'Product successfully registered.'
         });
     } catch(err) {
-        sendErrorMessage(err)
+        res.status(500).send({
+            message: 'Failed to process request.',
+            // data: err,
+        });
     }
 };
 
@@ -80,7 +92,10 @@ exports.put = async (req, res, next) => {
             message: 'Product updated successfully.'
         });
     } catch (err) {
-        sendErrorMessage(err)
+        res.status(500).send({
+            message: 'Failed to process request.',
+            // data: err,
+        });
     }
 };
 
@@ -92,13 +107,9 @@ exports.delete = async(req, res, next) => {
             message: 'Product removed successfuly.'
         });
     } catch (err) {
-        sendErrorMessage(err) 
+        res.status(500).send({
+            message: 'Failed to process request.',
+            // data: err,
+        });
     }
 };
-
-function sendErrorMessage(data) {
-    res.status(500).send({
-        message: 'Failed to process request.',
-        data,
-    });
-}

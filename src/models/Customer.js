@@ -13,7 +13,7 @@ const CustomerSchema = new Schema({
         required: true,
         unique: true,
     },
-    paswword: {
+    password: {
         type: String,
         required: true,
     }

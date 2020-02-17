@@ -22,19 +22,15 @@ exports.post = async (req, res, next) => {
     }
 
     try {
-        await repository.store(data);
+        await repository.store({ name, email, password });
 
         res.status(201).send({
             message: 'Customer created successfuly.'
         })
     } catch (err) {
-        sendErrorMessage(err);
+        res.status(500).send({
+            message: 'Failed to process request.',
+            // data: err,
+        });
     }
 };
-
-function sendErrorMessage(data) {
-    res.status(500).send({
-        message: 'Failed to process request.',
-        data,
-    });
-}
