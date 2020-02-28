@@ -3,21 +3,34 @@
 const guid = require('guid');
 const repository = require('../repositories/OrderRepository');
 
-exports.post = async(req, res, next) => {
+exports.get = async (req, res, next) => {
     try {
-        await repository.post({
+        const data = await repository.get();
+        
+        res.status(200).send(data);
+    } catch (err) {
+        res.status(500).send({
+            message: 'Failed to process the request.',
+            data: err,
+        });
+    }
+};
+
+exports.post = async (req, res, next) => {
+    try {
+        await repository.store({
             number: guid.raw().substring(0, 6),
-            customerId: req.body.customerId,
+            customer: req.body.customer,
             items: req.body.items,
         });
         
         res.status(201).send({
-            message: 'Order created succesfuly',
+            message: 'Order created succesfuly.',
         })
     } catch (err) {
         res.status(500).send({
-            message: 'Falied to process the request.',
-            //data: err,
+            message: 'Failed to process the request.',
+            data: err,
         });
     }   
 };

@@ -14,12 +14,12 @@ const OrderSchema = new Schema({
         enum: ['created', 'done'],
         default: 'created'
     },
-    customerId: {
+    customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer'
     },
     items: [{
-        qunatity: {
+        quantity: {
             type: Number,
             required: true,
             default: 1,
